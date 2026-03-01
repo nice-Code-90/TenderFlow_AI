@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="TenderFlow_AI.Application/TenderFlow_AI.Application.csproj" />
+  <Project Path="TenderFlow_AI.Domain/TenderFlow_AI.Domain.csproj" />
+  <Project Path="TenderFlow_AI.Infrastructure/TenderFlow_AI.Infrastructure.csproj" />
   <Project Path="TenderFlow_AI.Presentation/TenderFlow_AI.Presentation.csproj" />
 </Solution>

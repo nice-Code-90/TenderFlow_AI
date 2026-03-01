@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TenderFlow_AI.Domain\TenderFlow_AI.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
