@@ -9,15 +9,12 @@ namespace TenderFlow_AI.Domain.Entities;
 public class Tender
 {
     public Guid Id { get; private set; } = Guid.NewGuid();
+    public string IssuerName { get; set; }
     public string Title { get; set; }
     public decimal Budget { get; set; }
     public DateTime Deadline { get; set; }
     public TenderStatus Status { get; set; }
 
-    // Project Constraints from RFP
-    public int MaxSoftwareDevelopers { get; set; }
-    public int MaxPersonDays { get; set; }
-    public int WarrantyMonths { get; set; }
-    
+    public ICollection<TenderConstraint> Constraints { get; set; } = new List<TenderConstraint>();
     public ICollection<Requirement> Requirements { get; set; } = new List<Requirement>();
 }
