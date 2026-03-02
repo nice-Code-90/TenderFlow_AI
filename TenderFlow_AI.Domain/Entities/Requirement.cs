@@ -1,4 +1,5 @@
 using TenderFlow_AI.Domain.Enums;
+using TenderFlow_AI.Domain.Interfaces;
 
 namespace TenderFlow_AI.Domain.Entities;
 
@@ -6,13 +7,13 @@ namespace TenderFlow_AI.Domain.Entities;
 /// Represents a specific requirement extracted from an RFP/Tender document.
 /// Designed for elastic comparison between tender demands and corporate capabilities.
 /// </summary>
-public class Requirement
+public class Requirement : ITenantEntity
 {
     /// <summary>
     /// Unique identifier for the requirement.
     /// </summary>
     public Guid Id { get; private set; } = Guid.NewGuid();
-
+    public Guid OrganizationId { get; set; } 
     /// <summary>
     /// Reference to the parent Tender.
     /// </summary>

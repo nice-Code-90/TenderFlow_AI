@@ -1,11 +1,14 @@
+using TenderFlow_AI.Domain.Interfaces;
+
 namespace TenderFlow_AI.Domain.Entities;
 
 /// <summary>
 /// Represents a specific skill or qualification held by an employee.
 /// </summary>
-public class EmployeeSkill
+public class EmployeeSkill : ITenantEntity
 {
     public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid OrganizationId { get; set; } 
     
     /// <summary>
     /// The name/key of the skill (e.g., "AgileExperience", "SecurityClearance").

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TenderFlow_AI.Infrastructure\TenderFlow_AI.Infrastructure.csproj" />
+    <ProjectReference Include="..\TenderFlow_AI.Application\TenderFlow_AI.Application.csproj" />
   </ItemGroup>
 
 </Project>

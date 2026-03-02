@@ -48,7 +48,10 @@ public class TenderFlowDbContext : DbContext
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.OrganizationId = _currentOrganizationId;
+                if (entry.Entity.OrganizationId == Guid.Empty)
+                {
+                    entry.Entity.OrganizationId = _currentOrganizationId;
+                }
             }
         }
         return base.SaveChangesAsync(cancellationToken);
