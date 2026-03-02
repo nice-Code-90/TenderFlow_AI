@@ -1,3 +1,5 @@
+namespace TenderFlow_AI.Domain.Enums;
+
 public enum ComparisonOperator
 {
     GreaterThanOrEqual, 

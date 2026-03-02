@@ -14,10 +14,3 @@ public class CompanyProject
     /// </summary>
     public ICollection<ProjectAttribute> Attributes { get; set; } = new List<ProjectAttribute>();
 }
-
-public class ProjectAttribute
-{
-    public Guid Id { get; private set; } = Guid.NewGuid();
-    public string Key { get; set; }   // e.g., "YearsOfExperience", "TechStack", "Industry"
-    public string Value { get; set; } // e.g., "4", "Angular, .NET", "Aerospace"
-}
