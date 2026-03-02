@@ -1,11 +1,14 @@
+using TenderFlow_AI.Domain.Interfaces;
+
 namespace TenderFlow_AI.Domain.Entities;
 
 /// <summary>
 /// Represents a past corporate project used as a reference to prove competence.
 /// </summary>
-public class CompanyProject
+public class CompanyProject : ITenantEntity
 {
     public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid OrganizationId { get; set; }
     public string ProjectName { get; set; }
 
     /// <summary>
