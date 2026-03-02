@@ -2,16 +2,21 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using TenderFlow_AI.Application.Common.Interfaces;
 using TenderFlow_AI.Infrastructure.Persistence;
-using TenderFlow_AI.Infrastructure.Repositories;
+using TenderFlow_AI.Application.Services;
+using TenderFlow_AI.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddDbContext<TenderFlowDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IOrganizationContextRepository, OrganizationContextRepository>();
-builder.Services.AddScoped<TenderFlow_AI.Application.Services.OnboardingService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ITenantProvider, HttpTenantProvider>();
+
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<OnboardingService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

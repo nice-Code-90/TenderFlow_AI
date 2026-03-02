@@ -13,7 +13,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
   </ItemGroup>
-
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TenderFlow_AI.Application\TenderFlow_AI.Application.csproj" />
     <ProjectReference Include="..\TenderFlow_AI.Domain\TenderFlow_AI.Domain.csproj" />

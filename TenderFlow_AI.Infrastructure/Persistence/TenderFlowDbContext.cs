@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using TenderFlow_AI.Application.Common.Interfaces;
 using TenderFlow_AI.Domain.Entities;
 using TenderFlow_AI.Domain.Interfaces;
 
@@ -6,14 +8,14 @@ namespace TenderFlow_AI.Infrastructure.Persistence;
 
 public class TenderFlowDbContext : DbContext
 {
-    // In a real SaaS, this would be provided by a TenantService from the HTTP Context
-    private readonly Guid _currentOrganizationId;
+    private readonly ITenantProvider _tenantProvider;
+    public Guid CurrentOrganizationId => _tenantProvider.GetTenantId();
 
     public TenderFlowDbContext(
         DbContextOptions<TenderFlowDbContext> options,
-        Guid currentOrganizationId = default) : base(options)
+        ITenantProvider tenantProvider) : base(options)
     {
-        _currentOrganizationId = currentOrganizationId;
+        _tenantProvider = tenantProvider;
     }
 
     public DbSet<Organization> Organizations { get; set; }
@@ -50,18 +52,22 @@ public class TenderFlowDbContext : DbContext
             {
                 if (entry.Entity.OrganizationId == Guid.Empty)
                 {
-                    entry.Entity.OrganizationId = _currentOrganizationId;
+                    entry.Entity.OrganizationId = CurrentOrganizationId;
                 }
             }
         }
         return base.SaveChangesAsync(cancellationToken);
     }
 
-    private System.Linq.Expressions.LambdaExpression CreateTenantFilterExpression(Type type)
+    private LambdaExpression CreateTenantFilterExpression(Type type)
     {
-        var parameter = System.Linq.Expressions.Expression.Parameter(type, "e");
-        var property = System.Linq.Expressions.Expression.Property(parameter, nameof(ITenantEntity.OrganizationId));
-        var equal = System.Linq.Expressions.Expression.Equal(property, System.Linq.Expressions.Expression.Constant(_currentOrganizationId));
-        return System.Linq.Expressions.Expression.Lambda(equal, parameter);
+        var parameter = Expression.Parameter(type, "e");
+        var property = Expression.Property(parameter, nameof(ITenantEntity.OrganizationId));
+        
+        var dbContextInstance = Expression.Constant(this);
+        var tenantIdProperty = Expression.Property(dbContextInstance, nameof(CurrentOrganizationId));
+
+        var equal = Expression.Equal(property, tenantIdProperty);
+        return Expression.Lambda(equal, parameter);
     }
 }

@@ -7,7 +7,7 @@ using TenderFlow_AI.Domain.Interfaces;
 /// </summary>
 public class Organization
 {
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
     public string Name { get; set; }
     public string Industry { get; set; } // e.g., "Software Development"
     
