@@ -7,6 +7,8 @@ public interface IUnitOfWork : IDisposable
 {
     IOrganizationRepository Organizations { get; }
     IOrganizationContextRepository OrganizationContexts { get; }
+    IEmployeeRepository Employees { get; }
+    ICompanyProjectRepository CompanyProjects { get; }
     
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     

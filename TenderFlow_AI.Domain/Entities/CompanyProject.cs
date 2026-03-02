@@ -10,6 +10,7 @@ public class CompanyProject : ITenantEntity
     public Guid Id { get; private set; } = Guid.NewGuid();
     public Guid OrganizationId { get; set; }
     public string ProjectName { get; set; }
+    public string Description { get; set; }
 
     /// <summary>
     /// Flexible collection of project metadata (e.g., "Industry" : "Defense", "Complexity" : "High").
