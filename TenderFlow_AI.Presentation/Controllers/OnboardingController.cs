@@ -1,16 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using TenderFlow_AI.Application.Services;
-using TenderFlow_AI.Domain.Entities;
+using TenderFlow_AI.Presentation.Services;
 
 namespace TenderFlow_AI.Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class OnboardingController : ControllerBase
+public class OnboardingController : BaseApiController
 {
     private readonly OnboardingService _onboardingService;
 
-    public OnboardingController(OnboardingService onboardingService)
+    public OnboardingController(OnboardingService onboardingService, ApiResponseService apiResponseService)
+        : base(apiResponseService)
     {
         _onboardingService = onboardingService;
     }
@@ -18,21 +19,19 @@ public class OnboardingController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CompleteOnboarding([FromBody] OnboardingRequest request)
     {
-        if (request == null || request.OrganizationId == Guid.Empty || string.IsNullOrWhiteSpace(request.Industry))
-        {
-            return BadRequest("OrganizationId and Industry are required.");
-        }
-
-        await _onboardingService.CompleteOnboardingAsync(request.OrganizationId, request.Industry);
-
-        return Ok("Onboarding completed successfully.");
+        // This action doesn't require a pre-validated tenant ID from the context,
+        // as it's part of the onboarding request itself.
+        // We use the HandleApiResponseAsync overload that takes the service method directly.
+        return await ApiResponseService.HandleApiResponseAsync(() => 
+            _onboardingService.CompleteOnboardingAsync(request.OrganizationId, request.Industry));
     }
 
     [HttpGet("{organizationId}")]
-    public async Task<ActionResult<List<OrganizationContext>>> GetOrganizationContexts(Guid organizationId)
+    public async Task<IActionResult> GetOrganizationContexts(Guid organizationId)
     {
-        var contexts = await _onboardingService.GetOrganizationContextsAsync(organizationId);
-        return Ok(contexts);
+        // This also uses the direct method call as the orgId is passed in the route.
+        return await ApiResponseService.HandleApiResponseAsync(() => 
+            _onboardingService.GetOrganizationContextsAsync(organizationId));
     }
 }
 

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using TenderFlow_AI.Application.Common.Models;
+using TenderFlow_AI.Presentation.Services;
 
 namespace TenderFlow_AI.Presentation.Controllers;
 
@@ -7,14 +7,10 @@ namespace TenderFlow_AI.Presentation.Controllers;
 [Route("api/[controller]")]
 public class BaseApiController : ControllerBase
 {
-    protected ActionResult HandleResult<T>(Result<T> result)
-    {
-        if (result == null) return NotFound();
-        if (result.IsSuccess && result.Value != null)
-            return Ok(result.Value);
-        if (result.IsSuccess && result.Value == null)
-            return NotFound();
+    protected readonly ApiResponseService ApiResponseService;
 
-        return BadRequest(result.Error);
+    public BaseApiController(ApiResponseService apiResponseService)
+    {
+        ApiResponseService = apiResponseService;
     }
 }

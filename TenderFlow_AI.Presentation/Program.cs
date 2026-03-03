@@ -5,6 +5,7 @@ using TenderFlow_AI.Infrastructure.Persistence;
 using TenderFlow_AI.Application.Services;
 using TenderFlow_AI.Infrastructure.Services;
 using Mapster;
+using TenderFlow_AI.Presentation.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<OnboardingService>();
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<ProjectService>();
+builder.Services.AddScoped<HandleOutcomeService>();
+builder.Services.AddScoped<ApiResponseService>();
 
 builder.Services.AddMapster();
 

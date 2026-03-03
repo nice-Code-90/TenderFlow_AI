@@ -1,4 +1,5 @@
 using TenderFlow_AI.Application.Common.Interfaces;
+using TenderFlow_AI.Application.Common.Models;
 using TenderFlow_AI.Application.Factories;
 using TenderFlow_AI.Domain.Entities;
 
@@ -13,16 +14,14 @@ public class OnboardingService
         _uow = uow;
     }
 
-    public async Task CompleteOnboardingAsync(Guid orgId, string industry)
+    public async Task<Result<bool>> CompleteOnboardingAsync(Guid orgId, string industry)
     {
-        
         var existingOrg = await _uow.Organizations.GetByIdAsync(orgId);
         if (existingOrg != null)
         {
-            return; 
+            return Result<bool>.Failure($"Organization with ID {orgId} has already completed onboarding.");
         }
 
-        
         var organization = new Organization
         {
             Id = orgId,
@@ -31,7 +30,6 @@ public class OnboardingService
         };
         await _uow.Organizations.AddAsync(organization);
 
-        
         var defaultEmployee = new Employee
         {
             Name = "John Doe (Lead Developer)",
@@ -48,14 +46,12 @@ public class OnboardingService
         };
         await _uow.CompanyProjects.AddAsync(defaultProject);
 
-        
         var defaultRules = IndustryContextFactory.GetDefaultRules(industry);
         foreach (var rule in defaultRules)
         {
             rule.OrganizationId = orgId;
             await _uow.OrganizationContexts.AddAsync(rule);
         }
-        
         
         await _uow.OrganizationContexts.AddAsync(new OrganizationContext
         {
@@ -73,12 +69,13 @@ public class OnboardingService
             OrganizationId = orgId
         });
 
-        
         await _uow.SaveChangesAsync();
+        return Result<bool>.Success(true);
     }
 
-    public async Task<List<OrganizationContext>> GetOrganizationContextsAsync(Guid organizationId)
+    public async Task<Result<List<OrganizationContext>>> GetOrganizationContextsAsync(Guid organizationId)
     {
-        return await _uow.OrganizationContexts.GetByOrgIdAsync(organizationId);
+        var contexts = await _uow.OrganizationContexts.GetByOrgIdAsync(organizationId);
+        return Result<List<OrganizationContext>>.Success(contexts);
     }
 }
