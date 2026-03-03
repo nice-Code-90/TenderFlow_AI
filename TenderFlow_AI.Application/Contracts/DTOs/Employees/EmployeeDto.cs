@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace TenderFlow_AI.Application.Contracts.DTOs.Employees;
 
 public class EmployeeDto

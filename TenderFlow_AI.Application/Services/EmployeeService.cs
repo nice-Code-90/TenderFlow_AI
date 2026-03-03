@@ -1,3 +1,4 @@
+using Mapster;
 using TenderFlow_AI.Application.Common.Interfaces;
 using TenderFlow_AI.Application.Common.Models;
 using TenderFlow_AI.Application.Contracts.DTOs.Employees;
@@ -14,24 +15,26 @@ public class EmployeeService
         _uow = uow;
     }
 
-    public async Task<Result<int>> AddEmployeesBulkAsync(List<EmployeeDto> employeeDtos, Guid organizationId)
+    public async Task<Result<BulkResponseDto>> AddEmployeesBulkAsync(List<EmployeeDto> employeeDtos, Guid organizationId)
     {
-        var employees = employeeDtos.Select(dto => new Employee
+        var employees = employeeDtos.Select(dto =>
         {
-            Name = dto.Name,
-            Bio = dto.Bio,
-            OrganizationId = organizationId,
-            Skills = dto.Skills.Select(skillDto => new EmployeeSkill
+            var employee = dto.Adapt<Employee>();
+            employee.OrganizationId = organizationId;
+            foreach (var skill in employee.Skills)
             {
-                SkillName = skillDto.SkillName,
-                Value = skillDto.Value,
-                OrganizationId = organizationId
-            }).ToList()
-        });
+                skill.OrganizationId = organizationId;
+            }
+            return employee;
+        }).ToList();
 
         await _uow.Employees.AddRangeAsync(employees);
         await _uow.SaveChangesAsync();
 
-        return Result<int>.Success(employeeDtos.Count);
+        return Result<BulkResponseDto>.Success(new BulkResponseDto
+        {
+            Count = employees.Count,
+            Message = "Employees uploaded successfully"
+        });
     }
 }

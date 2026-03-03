@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace TenderFlow_AI.Application.Contracts.DTOs.Projects;
 
 public class CompanyProjectDto

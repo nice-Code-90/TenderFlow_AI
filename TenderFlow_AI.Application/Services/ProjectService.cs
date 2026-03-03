@@ -1,3 +1,4 @@
+using Mapster;
 using TenderFlow_AI.Application.Common.Interfaces;
 using TenderFlow_AI.Application.Common.Models;
 using TenderFlow_AI.Application.Contracts.DTOs.Projects;
@@ -14,24 +15,26 @@ public class ProjectService
         _uow = uow;
     }
 
-    public async Task<Result<int>> AddProjectsBulkAsync(List<CompanyProjectDto> projectDtos, Guid organizationId)
+    public async Task<Result<BulkResponseDto>> AddProjectsBulkAsync(List<CompanyProjectDto> projectDtos, Guid organizationId)
     {
-        var projects = projectDtos.Select(dto => new CompanyProject
+        var projects = projectDtos.Select(dto =>
         {
-            ProjectName = dto.ProjectName,
-            Description = dto.Description,
-            OrganizationId = organizationId,
-            Attributes = dto.Attributes.Select(attrDto => new ProjectAttribute
+            var project = dto.Adapt<CompanyProject>();
+            project.OrganizationId = organizationId;
+            foreach (var attribute in project.Attributes)
             {
-                Key = attrDto.Key,
-                Value = attrDto.Value,
-                OrganizationId = organizationId
-            }).ToList()
-        });
+                attribute.OrganizationId = organizationId;
+            }
+            return project;
+        }).ToList();
 
         await _uow.CompanyProjects.AddRangeAsync(projects);
         await _uow.SaveChangesAsync();
 
-        return Result<int>.Success(projectDtos.Count);
+        return Result<BulkResponseDto>.Success(new BulkResponseDto
+        {
+            Count = projects.Count,
+            Message = "Projects uploaded successfully"
+        });
     }
 }

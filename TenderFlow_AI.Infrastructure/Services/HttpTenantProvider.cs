@@ -15,15 +15,19 @@ namespace TenderFlow_AI.Infrastructure.Services
         public Guid GetTenantId()
         {
             
-            var tenantIdHeader = _httpContextAccessor.HttpContext?.Request.Headers["X-Tenant-Id"].ToString();
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null) return Guid.Empty;
 
-            if (Guid.TryParse(tenantIdHeader, out var tenantId))
+            if (httpContext.Request.Headers.TryGetValue("X-Organization-Id", out var headerValue))
             {
-                return tenantId;
+                if (Guid.TryParse(headerValue, out var tenantId))
+                {
+                    return tenantId;
+                }
             }
 
             
-            var routeValues = _httpContextAccessor.HttpContext?.Request.RouteValues;
+            var routeValues = httpContext.Request.RouteValues;
             if (routeValues != null && routeValues.TryGetValue("organizationId", out var routeId))
             {
                 if (Guid.TryParse(routeId?.ToString(), out var parsedRouteId))

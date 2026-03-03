@@ -4,6 +4,7 @@ using TenderFlow_AI.Application.Common.Interfaces;
 using TenderFlow_AI.Infrastructure.Persistence;
 using TenderFlow_AI.Application.Services;
 using TenderFlow_AI.Infrastructure.Services;
+using Mapster;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<OnboardingService>();
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<ProjectService>();
+
+builder.Services.AddMapster();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
