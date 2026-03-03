@@ -12,6 +12,8 @@ public class UnitOfWork : IUnitOfWork
     private IOrganizationContextRepository? _organizationContexts;
     private IEmployeeRepository? _employees;
     private ICompanyProjectRepository? _companyProjects;
+    private IEmployeeSkillRepository? _employeeSkills;
+    private IProjectAttributeRepository? _projectAttributes;
 
     public UnitOfWork(TenderFlowDbContext context)
     {
@@ -26,6 +28,10 @@ public class UnitOfWork : IUnitOfWork
         _employees ??= new EmployeeRepository(_context);
     public ICompanyProjectRepository CompanyProjects =>
         _companyProjects ??= new CompanyProjectRepository(_context);
+    public IEmployeeSkillRepository EmployeeSkills =>
+        _employeeSkills ??= new EmployeeSkillRepository(_context);
+    public IProjectAttributeRepository ProjectAttributes =>
+        _projectAttributes ??= new ProjectAttributeRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

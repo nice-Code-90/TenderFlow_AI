@@ -17,6 +17,8 @@ builder.Services.AddScoped<ITenantProvider, HttpTenantProvider>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<OnboardingService>();
+builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<ProjectService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
